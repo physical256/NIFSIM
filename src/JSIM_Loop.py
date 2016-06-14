@@ -5,7 +5,7 @@ Written by Simon Zieleniewski
 
 Created: 16-10-15
 
-Last updated 02-12-15
+Last updated 13-06-16
 
 '''
 
@@ -17,7 +17,7 @@ from modules.psf_convolution import psf_convolve
 import multiprocessing as mp
 import webbpsf as wp
 
-nspec = wp.NIRSpec()
+#nspec = wp.NIRSpec()
 #nspec.pupilopd = nspec.opd_list[0]
 #nspec.pupilopd = None
 
@@ -45,6 +45,8 @@ def wavelength_loop(cube, head, wavels, out_cube, newsize, outspax):
         head: Updated header
 
     '''
+
+    nspec = wp.NIRSpec()
     nspec.pupilopd = None
     print 'OPD = ', nspec.pupilopd
 
@@ -77,7 +79,7 @@ def wavelength_loop(cube, head, wavels, out_cube, newsize, outspax):
 
 
 
-def pp_wavelength_channel(chann, head, wavels, l, newsize, outspax):
+def pp_wavelength_channel(chann, head, wave, l, newsize, outspax):
     '''Function to take input datacube and process it iteratively through
     each wavelength channel as follows:
     - Generate PSF array for given channel
@@ -104,14 +106,16 @@ def pp_wavelength_channel(chann, head, wavels, l, newsize, outspax):
 
     '''
 
+    nspec = wp.NIRSpec()
     nspec.pupilopd = None
-    print 'OPD = ', nspec.pupilopd
+    #print 'OPD = ', nspec.pupilopd
 
     oversamp = 1000./float(outspax[0])
 
     #Create PSF channel
+    #print 'Wavelength = ', wave*1.E-6, 'm'
     psf = nspec.calcPSF(outfile=None, source=None, filter=None, nlambda=None,
-                        monochromatic=wavels[l]*1.E-6, oversample=oversamp,
+                        monochromatic=wave*1.E-6, oversample=oversamp,
                         fov_arcsec=5, rebin=False)
     psf = psf[0].data
 
@@ -160,14 +164,11 @@ def pp_wavelength_loop(cube, head, wavels, out_cube, newsize, outspax, usecpus=m
     queue = pp.Queue(limit=usecpus)
     waveloop = queue.manage(pp.MakeParallel(pp_wavelength_channel))
 
-    print "Calculating..."
+    print "Initialising..."
     for lam in xrange(len(wavels)):
-        #Print percentage bar
-        #update_progress(n.round(lam/float(len(wavels)),2))
         waveloop(cube[lam,:,:], head, wavels[lam], lam, newsize, outspax)
 
-
-    print "Finishing..."
+    print "Processing..."
     for chan, it in queue:
         update_progress(n.round(it/float(len(wavels)),2))
         out_cube[it,:,:] = chan
