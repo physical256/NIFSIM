@@ -2,7 +2,7 @@ JWST/NIRSpec-IFU Simulator Pipeline
 
 Written by Simon Zieleniewski
 
-Last Edited: 01-12-15
+Last Edited: 21-06-16
 
 
 ----------
@@ -105,7 +105,7 @@ $ python jsim.py -c arg1 arg2 arg3 etc…
 Use:
 $ python jsim.py -c
 to display arguments list
-	
+
 The commands must be entered in the following order:
             1. datacube: Input datacube filepath
             2. DIT: Exposure time [s]
@@ -119,6 +119,7 @@ The commands must be entered in the following order:
             10. Remove background: (True/False) - Subtract background spectrum
             11. Return object cube: (True/False) - Return object FITS cube
             12. Return transmission cube: (True/False) - Return transmission FITS cube
+            13. Approximate Drizzle technique: (True/False) - Output sampling of 50 mas
 
 Use -h or --help to display help message and exit
 Use -c or --cline option to use command line.
@@ -126,7 +127,7 @@ Use -o or --odir when using command line to specify output file directory. Defau
 Use -p or --proc when using command line to specify number of cores for parallel processing. Default is N_PROC-1 (if N_PROC>1)
 
 An example command line entry:
-$ python jsim.py -c -p 5 -o /Path/to/output_dir/ /Path/to/Input_cubes/Input_cube.fits 100 1000 F100-G140M True 0.0 True 1.0 0 True True True
+$ python jsim.py -c -p 5 -o /Path/to/output_dir/ /Path/to/Input_cubes/Input_cube.fits 100 1000 F100-G140M True 0.0 True 1.0 0 True True True False
 
 
 ----------
@@ -148,8 +149,3 @@ SPECRES - Spectral resolution FWHM in units of CUNIT3.
 All other headers will be ignored by the pipeline so extra information can be added.
 
 N.B, please make sure all header keys do not have white space in them! The FITS handling modules used break down when they find header keys with spaces in. Please use underscores instead.
-
-
-
-
-
