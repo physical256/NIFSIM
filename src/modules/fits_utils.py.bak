@@ -5,8 +5,6 @@ Author: Simon Zieleniewski
 Last updated: 12-10-14
 
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 import numpy as n
 import astropy.io.fits as p
@@ -31,7 +29,7 @@ def generate_fits_cube(cube, head, wavels, filename, extra_headers, outd, varext
         Saves FITS file in "Output_cubes" directory
 
     '''
-    from .misc_utils import path_setup
+    from misc_utils import path_setup
     
     #Update header with cube type
     #cube_type = filename.split('_')[0] + ' ' + filename.split('_')[1]
@@ -113,7 +111,7 @@ def fits_header_check(header):
 
     for i in required_headers:
         if i not in header:
-            print('Missing header: ', i)
+            print 'Missing header: ', i
             missing_headers.append(i)
     if len(missing_headers) != 0:
         #print 'Missing headers: ', missing_headers
@@ -125,7 +123,7 @@ def fits_header_check(header):
         if header['CUNIT2'].lower() == 'arcsec':
             header['CUNIT2'] = 'mas'
             header['CDELT2'] = header['CDELT2']*1000.
-        print('All required headers present!')
+        print 'All required headers present!'
 
     if header['CTYPE3'].lower() not in ctype3:
         raise HeaderError("CTYPE3 must be set to: ", ctype3)
@@ -143,7 +141,7 @@ def fits_header_check(header):
         raise HeaderError("FUNITS must be set to one of: ", funits)
     if header['CRPIX3'] not in crpix3:
         raise HeaderError("CRPIX3 must be set to: ", crpix3)
-    print('All header values acceptable!')
+    print 'All header values acceptable!'
 
 
 

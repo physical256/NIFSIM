@@ -8,14 +8,12 @@ Created: 16-10-15
 Last updated 13-06-16
 
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 import numpy as n
-from .modules.frebin import *
-from .modules.Gaussians import Gauss2D
-from .modules.misc_utils import update_progress
-from .modules.psf_convolution import psf_convolve
+from modules.frebin import *
+from modules.Gaussians import Gauss2D
+from modules.misc_utils import update_progress
+from modules.psf_convolution import psf_convolve
 import multiprocessing as mp
 import webbpsf as wp
 
@@ -50,7 +48,7 @@ def wavelength_loop(cube, head, wavels, out_cube, newsize, outspax):
 
     nspec = wp.NIRSpec()
     nspec.pupilopd = None
-    print('OPD = ', nspec.pupilopd)
+    print 'OPD = ', nspec.pupilopd
 
     oversamp = 1000./float(outspax[0])
 
@@ -162,15 +160,15 @@ def pp_wavelength_loop(cube, head, wavels, out_cube, newsize, outspax, usecpus=m
     '''
     import pprocess as pp
 
-    print('Using ', usecpus, ' CPUs')
+    print 'Using ', usecpus, ' CPUs'
     queue = pp.Queue(limit=usecpus)
     waveloop = queue.manage(pp.MakeParallel(pp_wavelength_channel))
 
-    print("Initialising...")
+    print "Initialising..."
     for lam in xrange(len(wavels)):
         waveloop(cube[lam,:,:], head, wavels[lam], lam, newsize, outspax)
 
-    print("Processing...")
+    print "Processing..."
     for chan, it in queue:
         update_progress(n.round(it/float(len(wavels)),2))
         out_cube[it,:,:] = chan

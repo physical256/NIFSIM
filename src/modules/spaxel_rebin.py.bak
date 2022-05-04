@@ -5,11 +5,9 @@ Author: Simon Zieleniewski
 Last updated: 19-05-15
 
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 import numpy as n
-from .frebin import *
+from frebin import *
 
 
 def spaxel_scale(datacube, head, spaxel):
@@ -27,7 +25,7 @@ def spaxel_scale(datacube, head, spaxel):
         new_head: updated header file
     '''
 
-    print('Spaxel scale')
+    print 'Spaxel scale'
 
     z, y, x = datacube.shape
     cdelt1 = head["CDELT1"]
@@ -50,7 +48,7 @@ def spaxel_scale(datacube, head, spaxel):
     head['NAXIS1'] = int(x_newsize)
     head['NAXIS2'] = int(y_newsize)
 
-    print('Spaxel scale - done!')
+    print 'Spaxel scale - done!'
     
     return newcube, head
 

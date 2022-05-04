@@ -6,18 +6,16 @@ Written by Simon Zieleniewski
 Started 16-10-15
 Last edited: 01-12-15
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 
 import os
 import numpy as n
 from scipy.interpolate import interp1d
 import scipy.constants as sc
-from .modules.gauss_convolve import gauss_convolve
-from .modules.frebin import *
-from .JSIM_Lowres import low_res_spec
-from .modules.misc_utils import path_setup
+from modules.gauss_convolve import gauss_convolve
+from modules.frebin import *
+from JSIM_Lowres import low_res_spec
+from modules.misc_utils import path_setup
 
 
 bgpath = path_setup('../../Sim_data/Background/')
@@ -54,17 +52,17 @@ def create_background_cube(datacube_shape, wavels, thru_cube, inst_qe_cube, DIT,
 
     '''
 
-    print('Generating background cube.')
+    print 'Generating background cube.'
 
     #Create emtpy cube of same size as science datacube
     init_cube = n.zeros((datacube_shape), dtype=n.float64)
 
     if sky:
         init_cube += sky_background(wavels, resolution, DIT)*thru_cube
-        print('Sky background done!')
+        print 'Sky background done!'
     if telescope:
         init_cube += telescope_background(wavels, temp, emis)*inst_qe_cube
-        print('Telescope background done!')
+        print 'Telescope background done!'
 
 
     #Add additional effects here
@@ -89,7 +87,7 @@ def create_background_cube(datacube_shape, wavels, thru_cube, inst_qe_cube, DIT,
     background_cube_new = background_cube_new.astype(n.float64)
     background_noise = n.abs(background_cube_new-background_cube)
 
-    print('Background cube generated!')
+    print 'Background cube generated!'
 
     return background_cube_new, background_noise, background_cube
 
