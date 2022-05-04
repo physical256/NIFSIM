@@ -67,6 +67,7 @@ The following are strongly recommended for optimum running:
 wxPython - This is used to load the GUI. It can be downloaded from: http://www.wxpython.org/download.php
 pprocess - This is used to allow parallel processing to improve performance. Download from https://pypi.python.org/pypi/pprocess
 
+pprocess - for Python 3 support change pprocess.py over to the version from https://github.com/mortonne/pprocess
 
 Make sure the modules can by found by your Python implementation. E.g. in a Python environment try:
 >>> import webbpsf
