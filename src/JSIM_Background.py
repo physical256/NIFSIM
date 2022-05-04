@@ -4,7 +4,7 @@ the sky & thermal background aspects of the model.
 Written by Simon Zieleniewski
 
 Started 16-10-15
-Last edited: 04-05=22
+Last edited: 04-05-22
 Migrated to python 3 by David Law & Sian Phillips
 '''
 from __future__ import print_function
