@@ -9,7 +9,8 @@ Written by Simon Zieleniewski
 
 Started 16-10-15
 
-Last edited 03-12-15
+Last edited 04-05-22
+Migrate to Python 3 by David Law & Sian Phillips
 '''
 from __future__ import print_function
 from __future__ import absolute_import

@@ -5,7 +5,8 @@ Written by Simon Zieleniewski
 
 Created: 16-10-15
 
-Last edited 01-12-15
+Last edited 04-05-22
+Migrated to python 3 by David Law & Sian Phillips
 '''
 from __future__ import print_function
 from __future__ import absolute_import

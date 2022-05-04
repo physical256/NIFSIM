@@ -3,7 +3,8 @@ for NIRSpec simulation code.
 
 By Simon Zieleniewski
 
-Last updated 01-11-15
+Last updated 04-05-22
+Migrated to python 3 by David Law & Sian Phillips
 
 '''
 from __future__ import print_function

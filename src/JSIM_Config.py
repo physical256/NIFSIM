@@ -6,7 +6,8 @@ Written by Simon Zieleniewski
 
 Created: 16-10-15
 
-Last updated 22-06-16
+Last updated 04-05-22
+Migrated to python 3 by David Law & Sian Phillips
 
 '''
 from __future__ import unicode_literals
