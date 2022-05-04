@@ -7,13 +7,15 @@ Created: 16-10-15
 
 Last edited 01-12-15
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 import numpy as n
 import scipy as s
 import os
-from modules.gauss_convolve import gauss_convolve
-from JSIM_Lowres import low_res_spec
-from modules.misc_utils import path_setup
+from .modules.gauss_convolve import gauss_convolve
+from .JSIM_Lowres import low_res_spec
+from .modules.misc_utils import path_setup
 
 
 tppath = path_setup('../../Sim_data/Throughput/')
@@ -47,17 +49,17 @@ def create_thruput_cube(datacube_shape, wavels, resolution, grating, telescope=T
 
     if telescope:
         init_cube *= JWST_transmission_curve(wavels, grating)
-        print 'Telescope transmission done!'
+        print('Telescope transmission done!')
     if instrument:
         init_cube *= NIRSpec_transmission_curve(wavels)
-        print 'Instrument transmission done!'
+        print('Instrument transmission done!')
 
 
     #Add additional illumination and spectrograph patterns
 
     thruput_cube = init_cube
 
-    print 'Throughput cube done!'
+    print('Throughput cube done!')
 
     return thruput_cube
 

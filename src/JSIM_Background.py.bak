@@ -8,8 +8,11 @@ Last edited: 01-12-15
 '''
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 
 
+from builtins import range
+from past.utils import old_div
 import os
 import numpy as n
 from scipy.interpolate import interp1d
@@ -75,7 +78,7 @@ def create_background_cube(datacube_shape, wavels, thru_cube, inst_qe_cube, DIT,
         background_cube *= DIT*(spaxel[0]*spaxel[1])*wave_disp*area
 
         background_cube_new = n.zeros(background_cube.shape, dtype=float)
-        for x in xrange(NDIT):
+        for x in range(NDIT):
             #Shot noise
             background_cube_new += n.random.poisson(background_cube)
         background_cube_new/=n.float(NDIT)
@@ -111,10 +114,10 @@ def blackbody(waves, T):
     #Convert wavelength array from microns to metres
     wave = waves*1.E-6
 
-    exp_part = n.exp(sc.h*sc.c/(wave*sc.k*T))
+    exp_part = n.exp(old_div(sc.h*sc.c,(wave*sc.k*T)))
 
     #Flux in [J/s/m/m2/steradian]
-    bb_spectrum = (2.*sc.h*sc.c**2/wave**5)*(exp_part - 1)**(-1)
+    bb_spectrum = (old_div(2.*sc.h*sc.c**2,wave**5))*(exp_part - 1)**(-1)
     #put into units of: J/s/lambda(um)/m^2/arcsec^2
     bb_spectrum /= 1.E6 #to get into J/s/m2/um/steradian
     bb_spectrum /= 4.2545E10 #to get into J/s/m2/um/arcsec2
@@ -191,6 +194,6 @@ def telescope_background(wavels, T, emissivity):
     cube_bb_spec = blackbody(wavels, T)
 
     tele_bg_spec = emissivity*cube_bb_spec
-    tele_bg_spec_ph = tele_bg_spec/(sc.h*sc.c/(wavels*1.E-6))
+    tele_bg_spec_ph = old_div(tele_bg_spec,(old_div(sc.h*sc.c,(wavels*1.E-6))))
     tele_bg_spec_ph.shape = (len(wavels),1,1)
     return tele_bg_spec_ph

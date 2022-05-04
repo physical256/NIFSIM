@@ -7,6 +7,7 @@ Last updated: 12-10-14
 '''
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import numpy as n
 import astropy.io.fits as p

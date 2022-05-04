@@ -6,6 +6,7 @@ Last updated: 23-06-15
 
 '''
 from __future__ import print_function
+from __future__ import unicode_literals
 
 import time
 import numpy as n

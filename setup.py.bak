@@ -8,11 +8,14 @@ Last updated: 01-12-15
 
 '''
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from distutils.core import setup
-import commands
+import subprocess
 import os
 #Get SVN revision number using svnversion command
-SVN = str(commands.getoutput("svnversion -c ./ | sed -e 's/[MS]//g' -e 's/^[[:digit:]]*://'"))
+SVN = str(subprocess.getoutput("svnversion -c ./ | sed -e 's/[MS]//g' -e 's/^[[:digit:]]*://'"))
 
 
 setup(name='JSIM',

@@ -13,8 +13,11 @@ Last edited 03-12-15
 '''
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 
 #Import all required modules
+from builtins import str
+from past.utils import old_div
 import numpy as n
 import astropy.io.fits as p
 import scipy.constants as sc
@@ -149,8 +152,8 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
 
 
     #Empty output cube
-    out_cube = n.zeros((len(lambs),int(head['CDELT2']*head['NAXIS2']/spax[1]),
-                        int(head['CDELT1']*head['NAXIS1']/spax[0])), dtype=n.float64)
+    out_cube = n.zeros((len(lambs),int(old_div(head['CDELT2']*head['NAXIS2'],spax[1])),
+                        int(old_div(head['CDELT1']*head['NAXIS1'],spax[0]))), dtype=n.float64)
 
     print('Input spaxel scale (x, y)', (head['CDELT1'], head['CDELT2']), ' mas')
     print('Cube shape (lam, y, x) = ', cube.shape)
@@ -196,16 +199,16 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
     #Energy-to-Photons Conversion factor will depend on head['FUNITS'] value
     if head['FUNITS'] == 'J/s/m2/um/arcsec2':
         print('Flux units = ', head['FUNITS'])
-        en2ph_conv_fac = (sc.h * sc.c)/(lambs*1.E-6) #J
+        en2ph_conv_fac = old_div((sc.h * sc.c),(lambs*1.E-6)) #J
     elif head['FUNITS'] == 'erg/s/cm2/A/arcsec2':
         print('Flux units = ', head['FUNITS'])
-        en2ph_conv_fac = (sc.h * sc.c * 1.E7)/(lambs*1.E-6 * 1.E4 * 1.E4) #erg/1.E4(cm2->m2)/1.E4(A->um)
+        en2ph_conv_fac = old_div((sc.h * sc.c * 1.E7),(lambs*1.E-6 * 1.E4 * 1.E4)) #erg/1.E4(cm2->m2)/1.E4(A->um)
     elif head['FUNITS'] == 'J/s/m2/A/arcsec2':
         print('Flux units = ', head['FUNITS'])
-        en2ph_conv_fac = (sc.h * sc.c)/(lambs*1.E-6 * 1.E4) #J/1.E4(A->um)
+        en2ph_conv_fac = old_div((sc.h * sc.c),(lambs*1.E-6 * 1.E4)) #J/1.E4(A->um)
     elif head['FUNITS'] == 'erg/s/cm2/um/arcsec2':
         print('Flux units = ', head['FUNITS'])
-        en2ph_conv_fac = (sc.h * sc.c * 1.E7)/(lambs*1.E-6 * 1.E4) #erg/1.E4(cm2->m2)
+        en2ph_conv_fac = old_div((sc.h * sc.c * 1.E7),(lambs*1.E-6 * 1.E4)) #erg/1.E4(cm2->m2)
     else:
         raise ValueError('UNKNOWN FLUX UNITS: Please change FUNITS header key to erg/s/cm2/A/arcsec2')
     en2ph_conv_fac.shape = (len(lambs),1,1)
@@ -269,7 +272,7 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
     generate_fits_cube(observed_cube, head, lambs, outFile_obscube, common_header_info, outdir, varext=n.power(observed_noise,2))
     generate_fits_cube(background_cube2, head, lambs, outFile_bgrcube, common_header_info, outdir, varext=n.power(background_noise2,2))
     generate_fits_cube((noiseless_background2+noiseless_dark2), head, lambs, outFile_nbgrcube, common_header_info, outdir)
-    generate_fits_cube((noiseless_object/observed_noise), head, lambs, outFile_snr, common_header_info, outdir)
+    generate_fits_cube((old_div(noiseless_object,observed_noise)), head, lambs, outFile_snr, common_header_info, outdir)
 
     if return_object == 'True':
         generate_fits_cube(object_cube, head, lambs, outFile_objcube, common_header_info, outdir)
@@ -281,7 +284,7 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
                                             2.*noiseless_dark, n.sqrt(2.)*nrc2)
 
         generate_fits_cube(reduced_cube, head, lambs, outFile_redcube, common_header_info, outdir, varext=n.power(reduced_noise,2))
-        generate_fits_cube((noiseless_object/reduced_noise), head, lambs, outFile_redsnr, common_header_info, outdir)
+        generate_fits_cube((old_div(noiseless_object,reduced_noise)), head, lambs, outFile_redsnr, common_header_info, outdir)
 
     if return_transmission == 'True':
         generate_fits_cube(throughput_cube, head, lambs, outFile_trans, common_header_info, outdir)

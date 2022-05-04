@@ -8,6 +8,7 @@ Last updated: 19-05-15
 from __future__ import print_function
 from __future__ import absolute_import
 
+from builtins import range
 import numpy as n
 from .frebin import *
 
@@ -42,7 +43,7 @@ def spaxel_scale(datacube, head, spaxel):
 
     newcube = n.zeros((z, y_newsize, x_newsize), dtype=n.float64)
 
-    for i in xrange(z):
+    for i in range(z):
         newcube[i,:,:] = frebin(datacube[i,:,:], (x_newsize, y_newsize), total=True)
 
     head['CDELT1'] = (spaxel[0], "mas")

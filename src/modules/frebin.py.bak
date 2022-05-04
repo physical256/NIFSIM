@@ -5,7 +5,10 @@ Author: Simon Zieleniewski
 Last updated: 19-05-15
 
 '''
+from __future__ import division
 
+from builtins import range
+from past.utils import old_div
 import numpy as n
 
 
@@ -50,9 +53,9 @@ def rebin(a, new_shape):
     M, N = a.shape
     m, nn = new_shape
     if m<M:
-        return a.reshape((m,M/m,nn,N/nn)).mean(3).mean(1)
+        return a.reshape((m,old_div(M,m),nn,old_div(N,nn))).mean(3).mean(1)
     else:
-        return n.repeat(n.repeat(a, m/M, axis=0), nn/N, axis=1)
+        return n.repeat(n.repeat(a, old_div(m,M), axis=0), old_div(nn,N), axis=1)
 
 
     
@@ -89,7 +92,7 @@ def frebin(array, shape, total=True):
     temp = n.zeros((shape[1], x),dtype=n.float64)
     #Loop on output image lines
 #    for i in xrange(0, int(n.round(shape[1],0)), 1):
-    for i in xrange(0, int(shape[1]), 1):
+    for i in range(0, int(shape[1]), 1):
         rstart = i*ybox
         istart = int(rstart)
         rstop = rstart + ybox
@@ -115,7 +118,7 @@ def frebin(array, shape, total=True):
     result = n.zeros((shape[0], shape[1]), dtype=n.float64)
     #Loop on output image samples
 #    for i in xrange(0, int(n.round(shape[0],0)), 1):
-    for i in xrange(0, int(shape[0]), 1):
+    for i in range(0, int(shape[0]), 1):
         rstart = i*xbox
         istart = int(rstart)
         rstop = rstart + xbox

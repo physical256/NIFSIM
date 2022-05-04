@@ -5,6 +5,7 @@ Author: simon Zieleniewski
 Last updated: 01-12-15
 
 '''
+from __future__ import print_function
 
 import numpy as n
 
@@ -64,8 +65,8 @@ def psf_convolve(datacube, psfcube):
         conv_channel = conv_cube_slice_final[(extra_y/2.)-yfac:y-extra_y/2.,(extra_x/2.)-xfac:x-extra_x/2.]
 
     else:
-        print 'Datacube spatial shape = (%g, %g)' % (datacube.shape[1], datacube.shape[0])
-        print 'PSF cube spatial shape = (%g, %g)' % (psfcube.shape[1], psfcube.shape[0])
+        print('Datacube spatial shape = (%g, %g)' % (datacube.shape[1], datacube.shape[0]))
+        print('PSF cube spatial shape = (%g, %g)' % (psfcube.shape[1], psfcube.shape[0]))
         raise ValueError("Can't currently deal with odd shaped arrays!")
 
     return conv_channel

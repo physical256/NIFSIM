@@ -9,7 +9,6 @@ Created: 16-10-15
 Last updated 22-06-16
 
 '''
-from __future__ import unicode_literals
 
 config_data = {
 

@@ -39,7 +39,7 @@ def generate_fits_cube(cube, head, wavels, filename, extra_headers, outd, varext
     head['TYPE'] = cube_type
     
     #Update header with extras:
-    head_keys = extra_headers.keys()
+    head_keys = list(extra_headers.keys())
     for i in head_keys:
         head[i] = extra_headers[i]
     

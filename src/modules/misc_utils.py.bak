@@ -5,6 +5,7 @@ Author: Simon Zieleniewski
 Last updated: 23-06-15
 
 '''
+from __future__ import print_function
 
 import time
 import numpy as n
@@ -55,11 +56,11 @@ def generate_seed(set_seed):
         seednum = time_seed.tm_year+time_seed.tm_mon+time_seed.tm_mday+\
                time_seed.tm_hour+time_seed.tm_min+time_seed.tm_sec
         #n.random.seed(seednum)
-        print 'SEEDNUM = ', seednum
+        print('SEEDNUM = ', seednum)
         return seednum
     elif set_seed >= 1 and set_seed <= 10:
         #n.random.seed(int(set_seed))
-        print 'SET SEED = ', int(set_seed)
+        print('SET SEED = ', int(set_seed))
         return int(set_seed)
 
 

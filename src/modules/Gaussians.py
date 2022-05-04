@@ -6,6 +6,7 @@ Last updated: 17-09-14
 
 '''
 from __future__ import division
+from __future__ import unicode_literals
 
 from past.utils import old_div
 import numpy as n

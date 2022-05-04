@@ -9,6 +9,7 @@ Last updated: 03-12-15
 
 '''
 from __future__ import print_function
+from __future__ import unicode_literals
 
 
 from future import standard_library
