@@ -1,6 +1,7 @@
 '''Generate cubes functions
 
-Last updated: 03-09-15
+Last updated: 04-05-2022
+Migrated to Python 3 by David Law and Sian Phillips
 
 '''
 from __future__ import print_function

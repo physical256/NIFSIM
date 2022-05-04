@@ -2,7 +2,8 @@
 
 Author: Simon Zieleniewski
 
-Last updated: 12-10-14
+Last updated: 04-05-2022
+Migrated to Python 3 by David Law and Sian Phillips
 
 '''
 from __future__ import print_function
