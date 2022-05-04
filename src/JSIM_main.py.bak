@@ -11,6 +11,8 @@ Started 16-10-15
 
 Last edited 03-12-15
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 #Import all required modules
 import numpy as n
@@ -19,16 +21,16 @@ import scipy.constants as sc
 import os
 import pprint as pp
 import multiprocessing as mp
-from JSIM_Specres import spectral_res
-from JSIM_Lowres import low_res_mode
-from JSIM_Loop import pp_wavelength_loop, wavelength_loop
-from JSIM_Background import create_background_cube
-from JSIM_Transmission import create_thruput_cube
-from modules.generate_cubes import *
-from modules.spaxel_rebin import *
-from modules.misc_utils import generate_seed, point_source
-from modules.fits_utils import *
-from JSIM_Config import *
+from .JSIM_Specres import spectral_res
+from .JSIM_Lowres import low_res_mode
+from .JSIM_Loop import pp_wavelength_loop, wavelength_loop
+from .JSIM_Background import create_background_cube
+from .JSIM_Transmission import create_thruput_cube
+from .modules.generate_cubes import *
+from .modules.spaxel_rebin import *
+from .modules.misc_utils import generate_seed, point_source
+from .modules.fits_utils import *
+from .JSIM_Config import *
 
 
 
@@ -67,22 +69,22 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
 
     '''
 
-    print 'Filename: ', datacube
-    print 'Output dir: ', outdir
-    print 'DIT = ', DIT
-    print 'NINT = ', NDIT
-    print 'Grating = ', grating
-    print 'Ignore LSF?', ignoreLSF
-    print 'Residual jitter = ', res_jitter
-    print 'Temperature = ', site_temp
-    print 'combine NINTS? ', combine_ndits
-    print 'Noise seed = ', noise_force_seed
-    print 'Spectral Nyquist sampling? ', Spec_nyquist
-    print 'Subtract background? ', remove_background
-    print 'Return Object cube?', return_object
-    print 'Return transmission?', return_transmission
-    print 'Drizzle?', drizzle
-    print 'No. of processes = ', nprocs
+    print('Filename: ', datacube)
+    print('Output dir: ', outdir)
+    print('DIT = ', DIT)
+    print('NINT = ', NDIT)
+    print('Grating = ', grating)
+    print('Ignore LSF?', ignoreLSF)
+    print('Residual jitter = ', res_jitter)
+    print('Temperature = ', site_temp)
+    print('combine NINTS? ', combine_ndits)
+    print('Noise seed = ', noise_force_seed)
+    print('Spectral Nyquist sampling? ', Spec_nyquist)
+    print('Subtract background? ', remove_background)
+    print('Return Object cube?', return_object)
+    print('Return transmission?', return_transmission)
+    print('Drizzle?', drizzle)
+    print('No. of processes = ', nprocs)
 
     #Generate random number seed
     seednum = generate_seed(noise_force_seed)
@@ -121,7 +123,7 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
 
     #RESCALE DATACUBE TO CHOSEN SPECTRAL RESOLUTION.
     if grating == 'Prism':
-        print 'Prism low resolution mode chosen'
+        print('Prism low resolution mode chosen')
         cube, head, lambs, delta_lambda, pix_disp, R = low_res_mode(cube, head, lambs)
     else:
         cube, head, lambs, delta_lambda, pix_disp, R = spectral_res(cube, head, grating, lambs, config_data['gratings'],
@@ -131,16 +133,16 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
 
     #POINT SOURCE CHECK
     if (head['NAXIS1']*head['CDELT1'])/float(spax[0]) < 1. or (head['NAXIS2']*head['CDELT2'])/float(spax[1]) < 1.:
-        print 'Point source - single spaxel output'
+        print('Point source - single spaxel output')
         config_data['ADR'] = 'OFF'
         cube, head = point_source(cube, head, spax)
 
 
     #REBIN CUBE TO 10 MAS
-    print 'Input datacube sampling = (%.1f, %.1f) mas' % (head['CDELT1'], head['CDELT2'])
-    print 'Input PSF sampling = (%.1f, %.1f) mas' % (spax[0]/10.,spax[1]/10.)
+    print('Input datacube sampling = (%.1f, %.1f) mas' % (head['CDELT1'], head['CDELT2']))
+    print('Input PSF sampling = (%.1f, %.1f) mas' % (spax[0]/10.,spax[1]/10.))
     if head['CDELT1'] != spax[0] and head['CDELT2'] != spax[1]:
-        print 'Rebinning input datacube to %.0f mas (same as PSF generation scale)' % (spax[0]/10.)
+        print('Rebinning input datacube to %.0f mas (same as PSF generation scale)' % (spax[0]/10.))
         cube *= (head['CDELT1']*head['CDELT2']*1.E-6)
         cube, head = spaxel_scale(cube, head, (spax[0]/10.,spax[0]/10.))
         cube /= (head['CDELT1']*head['CDELT2']*1.E-6)
@@ -150,29 +152,29 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
     out_cube = n.zeros((len(lambs),int(head['CDELT2']*head['NAXIS2']/spax[1]),
                         int(head['CDELT1']*head['NAXIS1']/spax[0])), dtype=n.float64)
 
-    print 'Input spaxel scale (x, y)', (head['CDELT1'], head['CDELT2']), ' mas'
-    print 'Cube shape (lam, y, x) = ', cube.shape
-    print 'Output spaxel scale (x, y) = ', spax, ' mas'
-    print 'Output cube shape (lam, y, x) = ', out_cube.shape
+    print('Input spaxel scale (x, y)', (head['CDELT1'], head['CDELT2']), ' mas')
+    print('Cube shape (lam, y, x) = ', cube.shape)
+    print('Output spaxel scale (x, y) = ', spax, ' mas')
+    print('Output cube shape (lam, y, x) = ', out_cube.shape)
 
 
     #WAVELENGTH CHANNEL LOOP
-    print 'Entering loop over wavelength channels'
+    print('Entering loop over wavelength channels')
     ncpus = nprocs
-    print 'No. of CPUs: ', ncpus
+    print('No. of CPUs: ', ncpus)
     try:
         import pprocess
-        print 'Using ', str(ncpus), ' CPUs'
+        print('Using ', str(ncpus), ' CPUs')
     except:
-        print 'No pprocess module'
-        print 'Using 1 CPU'
+        print('No pprocess module')
+        print('Using 1 CPU')
         ncpus = 1
     if ncpus >= 3:
         out_cube, head = pp_wavelength_loop(cube, head, lambs, out_cube,
                                             ((head['NAXIS1']*head['CDELT1'])/float(spax[0]),head['NAXIS2']*head['CDELT2']/float(spax[1])),
                                             spax, usecpus=ncpus)
     elif ncpus < 3:
-        print 'Using 1 CPU'
+        print('Using 1 CPU')
         out_cube, head = wavelength_loop(cube, head, lambs, out_cube,
                                          ((head['NAXIS1']*head['CDELT1'])/float(spax[0]),head['NAXIS2']*head['CDELT2']/float(spax[1])),
                                          spax)
@@ -188,21 +190,21 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
 
     #Remove input cube from memory!
     cube = n.zeros((1,1,1))
-    print 'PSF convolution, ADR effect, spaxel rebinning - all done!'
+    print('PSF convolution, ADR effect, spaxel rebinning - all done!')
 
 
     #Energy-to-Photons Conversion factor will depend on head['FUNITS'] value
     if head['FUNITS'] == 'J/s/m2/um/arcsec2':
-        print 'Flux units = ', head['FUNITS']
+        print('Flux units = ', head['FUNITS'])
         en2ph_conv_fac = (sc.h * sc.c)/(lambs*1.E-6) #J
     elif head['FUNITS'] == 'erg/s/cm2/A/arcsec2':
-        print 'Flux units = ', head['FUNITS']
+        print('Flux units = ', head['FUNITS'])
         en2ph_conv_fac = (sc.h * sc.c * 1.E7)/(lambs*1.E-6 * 1.E4 * 1.E4) #erg/1.E4(cm2->m2)/1.E4(A->um)
     elif head['FUNITS'] == 'J/s/m2/A/arcsec2':
-        print 'Flux units = ', head['FUNITS']
+        print('Flux units = ', head['FUNITS'])
         en2ph_conv_fac = (sc.h * sc.c)/(lambs*1.E-6 * 1.E4) #J/1.E4(A->um)
     elif head['FUNITS'] == 'erg/s/cm2/um/arcsec2':
-        print 'Flux units = ', head['FUNITS']
+        print('Flux units = ', head['FUNITS'])
         en2ph_conv_fac = (sc.h * sc.c * 1.E7)/(lambs*1.E-6 * 1.E4) #erg/1.E4(cm2->m2)
     else:
         raise ValueError('UNKNOWN FLUX UNITS: Please change FUNITS header key to erg/s/cm2/A/arcsec2')
@@ -284,27 +286,27 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
     if return_transmission == 'True':
         generate_fits_cube(throughput_cube, head, lambs, outFile_trans, common_header_info, outdir)
 
-    print 'Output cubes created!'
-    print '          --------     '
-    print 'Inbuilt Telescope Parameters'
-    print '          --------     '
-    print 'Telescope area = %.2f [m^2]' % config_data['area']
-    print 'Telescope emissivity = %.2f ' % config_data['emissivity']
-    print 'Telescope temperature = %.1f [K]' % site_temp
-    print '          --------     '
-    print 'Inbuilt Instrument Parameters'
-    print '          --------     '
-    print 'Wavelength range = %.4g [A] to %.4g [A]' % (lambs[0]*10000., lambs[-1]*10000.)
-    print 'Spectral resolving power = %.0i' % R
+    print('Output cubes created!')
+    print('          --------     ')
+    print('Inbuilt Telescope Parameters')
+    print('          --------     ')
+    print('Telescope area = %.2f [m^2]' % config_data['area'])
+    print('Telescope emissivity = %.2f ' % config_data['emissivity'])
+    print('Telescope temperature = %.1f [K]' % site_temp)
+    print('          --------     ')
+    print('Inbuilt Instrument Parameters')
+    print('          --------     ')
+    print('Wavelength range = %.4g [A] to %.4g [A]' % (lambs[0]*10000., lambs[-1]*10000.))
+    print('Spectral resolving power = %.0i' % R)
     if R == 100.:
-        print 'Spectral resolution = variable'
-        print 'Spectral sampling = 2 pixels per FWHM'
+        print('Spectral resolution = variable')
+        print('Spectral sampling = 2 pixels per FWHM')
     else:
-        print 'Spectral resolution = %.3f [A]' % (delta_lambda*10000.)
-        print 'Spectral sampling = %.3f [A/pix]' % (pix_disp*10000.)
-    print 'Spatial scale = (%.1f mas, %.1f mas)' % (spax[0], spax[1])
-    print 'Detector dark current = %.4f [e-/s/pixel]' % config_data['dark_current']
-    print 'Detector read noise = %.4f [e-/pixel] RMS [DIT>120s]' % config_data['read_noise']
-    print '                     = %.4f [e-/pixel] RMS [DIT<=120s]' % config_data['read_noise']
-    print ' '
-    print 'Simulation Complete!'
+        print('Spectral resolution = %.3f [A]' % (delta_lambda*10000.))
+        print('Spectral sampling = %.3f [A/pix]' % (pix_disp*10000.))
+    print('Spatial scale = (%.1f mas, %.1f mas)' % (spax[0], spax[1]))
+    print('Detector dark current = %.4f [e-/s/pixel]' % config_data['dark_current'])
+    print('Detector read noise = %.4f [e-/pixel] RMS [DIT>120s]' % config_data['read_noise'])
+    print('                     = %.4f [e-/pixel] RMS [DIT<=120s]' % config_data['read_noise'])
+    print(' ')
+    print('Simulation Complete!')

@@ -8,7 +8,10 @@ Last updated 01-11-15
 '''
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 
+from builtins import range
+from past.utils import old_div
 import os
 import numpy as n
 import scipy.interpolate as si
@@ -37,7 +40,7 @@ def nr(lamb, s, Rpower):
         lam - new wavelength [um]
 
     '''
-    for i in xrange(500):
+    for i in range(500):
         lamb = lamb - (2.*(lamb-s) - lamb/float(Rpower))/float(2.-(1/float(Rpower)))
     return lamb
 
@@ -77,7 +80,7 @@ def low_res_mode(cube, head, wavels):
         
     #Load data
     dat = n.genfromtxt(os.path.join(prism_path,'Prism_v2.csv'), delimiter=', ')
-    dellam = dat[:,0] / dat[:,1]
+    dellam = old_div(dat[:,0], dat[:,1])
 
     #Ignore spectral dimension if input cube is coarser spectral resolution than output
     if head['SPECRES'] > dat[:,2].any():
@@ -93,7 +96,7 @@ def low_res_mode(cube, head, wavels):
     #Create new finely sampled wavelength array (0.6-5.0 um) for pixel summation
     newlam = n.arange(0.6, 5.0, dat[0,2]/100.)
     newres = rinterp(newlam)
-    newrs = newlam/newres
+    newrs = old_div(newlam,newres)
     rpower = si.interp1d(newlam, newrs)
     dlam = si.interp1d(newlam, newres)
 
@@ -105,7 +108,7 @@ def low_res_mode(cube, head, wavels):
     lams.append(lam)
     dlams.append(dl)
     try:
-        for i in xrange(2000):
+        for i in range(2000):
             lam = nr(lam, lam+dl/2., rpower(lam+dl/2.))
             lams.append(lam)
             dlams.append(dlam(lam))
@@ -117,7 +120,7 @@ def low_res_mode(cube, head, wavels):
     dlams = n.array(dlams)   
     
     #Find relationship between wavelength and pixel no.
-    wavetopix = n.column_stack((range(len(lams)), lams))
+    wavetopix = n.column_stack((list(range(len(lams))), lams))
     wtpinterp = si.interp1d(wavetopix[:,0], wavetopix[:,1])
     #Nyquist sample pixels (2 pixels per lambda)
     nyqpix = n.linspace(wavetopix[0,0], wavetopix[-1,0], 2*len(wavetopix[:,0]))
@@ -177,7 +180,7 @@ def low_res_mode(cube, head, wavels):
     print('Input cube sum = ', n.sum(hpixcube)*n.diff(hpix)[0])
     target = n.sum(hpixcube)*n.diff(hpix)[0]
     current = n.sum(final_cube)*n.diff(wavetonyqpix[start:end,0])[0]
-    fac = current/target
+    fac = old_div(current,target)
     final_cube = n.divide(final_cube, fac)
     print('Output cube sum = ', n.sum(final_cube)*n.diff(wavetonyqpix[start:end,0])[0])
 
@@ -282,7 +285,7 @@ def low_res_spec(spec, wavetopix, transmission_spec=False):
     print('Input spectrum sum = ', n.sum(hpixspec)*n.diff(hpix)[0])
     target = n.sum(hpixspec)*n.diff(hpix)[0]
     current = n.sum(final_spec[:,1])*n.diff(wavetopix[:,0])[0]
-    fac = current/target
+    fac = old_div(current,target)
     final_spec[:,1] = n.divide(final_spec[:,1], fac)
     print('Output cube sum = ', n.sum(final_spec[:,1])*n.diff(wavetopix[:,0])[0])
     

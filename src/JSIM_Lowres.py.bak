@@ -6,13 +6,15 @@ By Simon Zieleniewski
 Last updated 01-11-15
 
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 import os
 import numpy as n
 import scipy.interpolate as si
 from scipy.ndimage.filters import convolve1d
-from modules.Gaussians import Gauss
-from modules.misc_utils import path_setup
+from .modules.Gaussians import Gauss
+from .modules.misc_utils import path_setup
 
 
 prism_path = path_setup('../../Sim_data/Prism/')
@@ -79,8 +81,8 @@ def low_res_mode(cube, head, wavels):
 
     #Ignore spectral dimension if input cube is coarser spectral resolution than output
     if head['SPECRES'] > dat[:,2].any():
-        print 'Input spectral resolution coarser than output.'
-        print 'Ignoring spectral dimension.'       
+        print('Input spectral resolution coarser than output.')
+        print('Ignoring spectral dimension.')       
         return cube, head, wavels, head['SPECRES'], head['CDELT3']
     else:
         convres = n.sqrt(dat[:,2]**2 - head['SPECRES']**2)
@@ -109,7 +111,7 @@ def low_res_mode(cube, head, wavels):
             dlams.append(dlam(lam))
             dl = dlam(lam)
     except ValueError:
-        print 'Pixel wavelength values determined'
+        print('Pixel wavelength values determined')
 
     lams = n.array(lams)
     dlams = n.array(dlams)   
@@ -130,25 +132,25 @@ def low_res_mode(cube, head, wavels):
     
     #Interpolate datacube onto regular pixel grid (irregular wavelength grid) with 10x hypersampling
     if wavels[0] < wavetonyqpix[0,1] and wavels[-1] > wavetonyqpix[-1,1]:#cube wavelength range larger than low res mode
-        print 'Cube wavelength range larger than low res mode'
+        print('Cube wavelength range larger than low res mode')
         start = 0
         end = -1
         incube_interp = si.interp1d(wavels, cube, axis=0)
         hpix = n.linspace(wavetonyqpix[0,0], wavetonyqpix[-1,0], len(wavetonyqpix)*10.)
     elif wavels[0] > wavetonyqpix[0,1] and wavels[-1] < wavetonyqpix[-1,1]:#cube wavelength range inside low res mode
-        print 'Cube wavelength range inside low res mode range'
+        print('Cube wavelength range inside low res mode range')
         incube_interp = si.interp1d(wavels, cube, axis=0)
         start = n.where(wavetonyqpix[:,1] > wavels[0])[0][0]
         end = n.where(wavetonyqpix[:,1] > wavels[-1])[0][0] - 1
         hpix = n.linspace(wavetonyqpix[start,0], wavetonyqpix[end,0], len(wavetonyqpix[start:end,0])*10.)
     elif wavels[0] > wavetonyqpix[0,1]:#cube short wavelength longer than low res mode shortest wavelength
-        print 'Cube shortest wavelength larger than low res mode'
+        print('Cube shortest wavelength larger than low res mode')
         incube_interp = si.interp1d(wavels, cube, axis=0)
         start = n.where(wavetonyqpix[:,1] > wavels[0])[0][0]
         end = -1
         hpix = n.linspace(wavetonyqpix[start,0], wavetonyqpix[-1,0], len(wavetonyqpix[start:,0])*10.)
     elif wavels[-1] < wavetonyqpix[-1,1]:#cube longest wavelength shorter than low res mode longest wavelength
-        print 'Cube longest wavelength shorter than low res mode'
+        print('Cube longest wavelength shorter than low res mode')
         incube_interp = si.interp1d(wavels, cube, axis=0)
         start = 0
         end = n.where(wavetonyqpix[:,1] >wavels[-1])[0][0] - 1
@@ -172,12 +174,12 @@ def low_res_mode(cube, head, wavels):
     final_cube = convcube
 
     #Ensure flux conservation (simplified method)
-    print 'Input cube sum = ', n.sum(hpixcube)*n.diff(hpix)[0]
+    print('Input cube sum = ', n.sum(hpixcube)*n.diff(hpix)[0])
     target = n.sum(hpixcube)*n.diff(hpix)[0]
     current = n.sum(final_cube)*n.diff(wavetonyqpix[start:end,0])[0]
     fac = current/target
     final_cube = n.divide(final_cube, fac)
-    print 'Output cube sum = ', n.sum(final_cube)*n.diff(wavetonyqpix[start:end,0])[0]
+    print('Output cube sum = ', n.sum(final_cube)*n.diff(wavetonyqpix[start:end,0])[0])
 
     #Output wavelength values
     final_lams = wavetonyqpix[start:end,1]
@@ -277,12 +279,12 @@ def low_res_spec(spec, wavetopix, transmission_spec=False):
     out_samp = outputres(wavetopix[:,1])/2.
 
     #Ensure flux conservation (simplified method)
-    print 'Input spectrum sum = ', n.sum(hpixspec)*n.diff(hpix)[0]
+    print('Input spectrum sum = ', n.sum(hpixspec)*n.diff(hpix)[0])
     target = n.sum(hpixspec)*n.diff(hpix)[0]
     current = n.sum(final_spec[:,1])*n.diff(wavetopix[:,0])[0]
     fac = current/target
     final_spec[:,1] = n.divide(final_spec[:,1], fac)
-    print 'Output cube sum = ', n.sum(final_spec[:,1])*n.diff(wavetopix[:,0])[0]
+    print('Output cube sum = ', n.sum(final_spec[:,1])*n.diff(wavetopix[:,0])[0])
     
     #Put spectrum flux back into photons/wavelength units (except transmission spectrum)
     if not transmission_spec:

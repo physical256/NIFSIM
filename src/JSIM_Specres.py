@@ -7,7 +7,11 @@ Last updated: 01-12-15
 '''
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 
+from builtins import input
+from builtins import range
+from past.utils import old_div
 import numpy as n
 from scipy.ndimage.filters import convolve1d
 from .modules.Gaussians import Gauss
@@ -78,13 +82,13 @@ def spectral_res(datacube, head, grating, wavels, gratings, spec_nyquist=True, s
     if head['SPECRES'] >= new_res:
         print('WARNING: Input spectral resolution is coarser (or equal) than chosen output!')
         #Chose whether to convolve with LSF or simply resample.
-        condition = raw_input('Do you want to convolve with Gaussian LSF of FWHM'
+        condition = input('Do you want to convolve with Gaussian LSF of FWHM'
                                   ' given by band and chosen resolving power [y], or not [any other key]?: ')
 
         if condition=='y':
             print('Convolving with LSF')
             #Generate Gaussian LSF of FWHM = (bandws[0]+bandws[1])/(2.*R)
-            sig = new_res/(2.*n.sqrt(2.*n.log(2.)))
+            sig = old_div(new_res,(2.*n.sqrt(2.*n.log(2.))))
             gauss_array = Gauss(sig, head['CDELT3'])
             #Convolve datacube array with Gaussian along wavelength axis
             datacube = convolve1d(datacube, gauss_array[:,1], axis=0)
@@ -93,7 +97,7 @@ def spectral_res(datacube, head, grating, wavels, gratings, spec_nyquist=True, s
         print('Input spectral resolution smaller than chosen output.')
         print('Convolving with corresponding LSF.')
         #Generate Gaussian LSF of FWHM = sqrt(new_resolution**2-head['SPECRES']**2)
-        sig = n.sqrt(new_res**2-head['SPECRES']**2)/(2.*n.sqrt(2.*n.log(2.)))
+        sig = old_div(n.sqrt(new_res**2-head['SPECRES']**2),(2.*n.sqrt(2.*n.log(2.))))
         gauss_array = Gauss(sig, head['CDELT3'])
 
         #Convolve datacube array with Gaussian along wavelength axis
@@ -168,7 +172,7 @@ def spectral_res(datacube, head, grating, wavels, gratings, spec_nyquist=True, s
 
     #Bin up in spectral dimension to new pixel sampling
     #Iterate over x-axis and use frebin function on 2D y-z arrays
-    for i in xrange(x):
+    for i in range(x):
             new_cube[:,:,i] = frebin(datacube[start:end+1,:,i], (y,len(new_wavels)), True)
 
     #print 'New cube sum = ', new_cube.sum()
@@ -186,7 +190,7 @@ def spectral_res(datacube, head, grating, wavels, gratings, spec_nyquist=True, s
     head['NAXIS3'] = len(new_wavels)
     head['SPECRES'] = new_res
 
-    resol = n.round(new_wavels[len(new_wavels)/2]/bandws[2], 0)
+    resol = n.round(old_div(new_wavels[old_div(len(new_wavels),2)],bandws[2]), 0)
 
     print('Spectral resolution and wavelength range - done!')
 

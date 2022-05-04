@@ -11,13 +11,16 @@ Last updated: 03-12-15
 from __future__ import print_function
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import getopt
 import sys
 import os
 import numpy as n
 import multiprocessing as mp
 from src.JSIM_main import main
-import commands
+import subprocess
 from src.modules.misc_utils import path_setup
 
 
@@ -32,7 +35,7 @@ if __name__=="__main__":
         print('VERSION = ', ver)
         verinfo.close()
     except:
-        ver = str(commands.getoutput("svnversion -c ./ | sed -e 's/[MS]//g' -e 's/^[[:digit:]]*://'"))
+        ver = str(subprocess.getoutput("svnversion -c ./ | sed -e 's/[MS]//g' -e 's/^[[:digit:]]*://'"))
 
 
     optlist, args = getopt.getopt(sys.argv[1:], 'hcp:o:', ['help', 'cline', 'proc', 'odir'])

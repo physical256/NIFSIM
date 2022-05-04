@@ -11,6 +11,7 @@ Last updated 13-06-16
 from __future__ import print_function
 from __future__ import absolute_import
 
+from builtins import range
 import numpy as n
 from .modules.frebin import *
 from .modules.Gaussians import Gauss2D
@@ -54,7 +55,7 @@ def wavelength_loop(cube, head, wavels, out_cube, newsize, outspax):
 
     oversamp = 1000./float(outspax[0])
 
-    for l in xrange(len(wavels)):
+    for l in range(len(wavels)):
         #Print percentage bar
         update_progress(n.round(l/float(len(wavels)),2))
 
@@ -167,7 +168,7 @@ def pp_wavelength_loop(cube, head, wavels, out_cube, newsize, outspax, usecpus=m
     waveloop = queue.manage(pp.MakeParallel(pp_wavelength_channel))
 
     print("Initialising...")
-    for lam in xrange(len(wavels)):
+    for lam in range(len(wavels)):
         waveloop(cube[lam,:,:], head, wavels[lam], lam, newsize, outspax)
 
     print("Processing...")

@@ -3,6 +3,7 @@
 Last updated: 03-09-15
 
 '''
+from __future__ import print_function
 
 import numpy as n
 
@@ -71,7 +72,7 @@ def generate_read_cube(cube_shape, wavels, DIT, NDIT, readsig_vis, readsig_nirs,
 
     #Read noise sigma from KMOS HAWAII-2RG detectors
 
-    print 'Generating read noise cube'
+    print('Generating read noise cube')
 
     #Check what wavelengths cube is (Vis/near-IR cutoff at 0.8 um.)
     cutoff = 0.8
@@ -81,7 +82,7 @@ def generate_read_cube(cube_shape, wavels, DIT, NDIT, readsig_vis, readsig_nirs,
         readsig_nir = readsig_nirs[1]
     else:
         readsig_nir = readsig_nirs[0]
-    print 'DIT = ', DIT, 's, ', 'NIR READ = ', readsig_nir, 'e/pix'
+    print('DIT = ', DIT, 's, ', 'NIR READ = ', readsig_nir, 'e/pix')
 
     #Use normal distribution of mean=0., sigma=readsig
     #Also create "noiseless" read cube to use in SNR cubes

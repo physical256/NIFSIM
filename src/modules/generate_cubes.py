@@ -5,6 +5,7 @@ Last updated: 03-09-15
 '''
 from __future__ import print_function
 
+from builtins import range
 import numpy as n
 
 
@@ -33,7 +34,7 @@ def generate_object_cube(datacube, wavels, throughput_cube, DIT, NDIT, spaxel, d
         object_cube = datacube*throughput_cube*DIT*(spaxel[0]*spaxel[1])*delta_lambda*area
 
         object_cube_new = n.zeros(object_cube.shape, dtype=float)
-        for x in xrange(NDIT):
+        for x in range(NDIT):
             #Shot noise
             object_cube_new += n.random.poisson(object_cube)
         object_cube_new/=np.float(NDIT)
@@ -93,7 +94,7 @@ def generate_read_cube(cube_shape, wavels, DIT, NDIT, readsig_vis, readsig_nirs,
     if slow==True:
         try:
             vis_cut = n.where(wavels < cutoff)[0][-1]
-            for nnn in xrange(NDIT):
+            for nnn in range(NDIT):
                 read_cube[0:vis_cut+1,:,:] += n.random.normal(zero_cube[0:vis_cut+1,:,:], readsig_vis)
                 nrc[0:vis_cut+1,:,:] += readsig_vis**2.0
                 read_cube[vis_cut:,:,:] += n.random.normal(zero_cube[vis_cut:,:,:], readsig_nir)
@@ -103,11 +104,11 @@ def generate_read_cube(cube_shape, wavels, DIT, NDIT, readsig_vis, readsig_nirs,
         except:
             #Check if wavelengths are shorter (visible) or longer (near-IR) than 0.8 um.
             if wavels[-1] < cutoff:
-                for nnn in xrange(NDIT):
+                for nnn in range(NDIT):
                     read_cube += n.random.normal(zero_cube, readsig_vis)
                     nrc += readsig_vis**2.0
             elif wavels[0] > cutoff:
-                for nnn in xrange(NDIT):
+                for nnn in range(NDIT):
                     read_cube += n.random.normal(zero_cube, readsig_nir)
                     nrc += readsig_nir**2.0
             nrc=n.sqrt(nrc)
@@ -170,7 +171,7 @@ def generate_dark_cube(cube_shape, wavels, dit, ndit, vis_dark, nir_dark, slow=F
         dark_cube *= dit
 
         dark_cube_new = n.zeros(dark_cube.shape, dtype=float)
-        for x in xrange(ndit):
+        for x in range(ndit):
             #Shot noise
             dark_cube_new += n.random.poisson(dark_cube)
         dark_cube_new/=np.float(ndit)

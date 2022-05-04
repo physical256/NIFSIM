@@ -8,6 +8,7 @@ Created: 16-10-15
 Last updated: 03-12-15
 
 '''
+from __future__ import print_function
 
 
 import getopt
@@ -28,7 +29,7 @@ if __name__=="__main__":
         verpath = path_setup('../../')
         verinfo = open(verpath+'PKG-INFO')
         ver = verinfo.readlines()[2][:-1].split('Version: ')[1]
-        print 'VERSION = ', ver
+        print('VERSION = ', ver)
         verinfo.close()
     except:
         ver = str(commands.getoutput("svnversion -c ./ | sed -e 's/[MS]//g' -e 's/^[[:digit:]]*://'"))
@@ -38,25 +39,25 @@ if __name__=="__main__":
 
     for o, a in optlist:
         if o in ("-h", "--help"):
-            print""
-            print '    --------     '
-            print 'JWST/NIRSpec Simulator'
-            print '    --------     '
-            print 'SVN Version: ', ver
-            print"---"
-            print 'TO RUN'
-            print 'GUI'
-            print '>>> python jsim.py'
-            print""
-            print 'Command line'
-            print '>>> python jsim.py -c arg arg2 ...'
-            print"---"
-            print 'OPTIONS'
-            print '-h or --help = display this message and exit'
-            print '-c or --cline = use command line. Use: >>> python jsim.py -c to display arguments list'
-            print '-p or --proc = set the number of processors when using command line (1-'+str(mp.cpu_count())+')'
-            print '-o or --odir = set the output file directory when using the command line (default: /JSIM-#/Output_cubes)'
-            print""
+            print("")
+            print('    --------     ')
+            print('JWST/NIRSpec Simulator')
+            print('    --------     ')
+            print('SVN Version: ', ver)
+            print("---")
+            print('TO RUN')
+            print('GUI')
+            print('>>> python jsim.py')
+            print("")
+            print('Command line')
+            print('>>> python jsim.py -c arg arg2 ...')
+            print("---")
+            print('OPTIONS')
+            print('-h or --help = display this message and exit')
+            print('-c or --cline = use command line. Use: >>> python jsim.py -c to display arguments list')
+            print('-p or --proc = set the number of processors when using command line (1-'+str(mp.cpu_count())+')')
+            print('-o or --odir = set the output file directory when using the command line (default: /JSIM-#/Output_cubes)')
+            print("")
             sys.exit()
 
     # nprocs = mp.cpu_count()-1
@@ -65,7 +66,7 @@ if __name__=="__main__":
         if o in ("-p", "--proc"):
             nprocs = int(a)
             if nprocs > mp.cpu_count():
-                print 'Only '+str(mp.cpu_count())+' CPUs. Using '+str(mp.cpu_count())
+                print('Only '+str(mp.cpu_count())+' CPUs. Using '+str(mp.cpu_count()))
                 nprocs = mp.cpu_count()
 
     odir = path_setup('../../Output_cubes/')
@@ -74,32 +75,32 @@ if __name__=="__main__":
             if os.path.exists(a) and os.path.isdir(a):
                 odir = a
             elif not os.path.exists(a):
-                print "OUTPUT DIRECTORY DOESN'T EXIST (OR IS NOT A DIRECTORY)! PLEASE CHOOSE AGAIN. EXITING"
+                print("OUTPUT DIRECTORY DOESN'T EXIST (OR IS NOT A DIRECTORY)! PLEASE CHOOSE AGAIN. EXITING")
                 sys.exit()
-    print 'LEN ARGS = ', len(args)
+    print('LEN ARGS = ', len(args))
     for o, a in optlist:
         if o in ("-c", "--cline") and len(args) != 13:
-            print""
-            print 'COMMAND LINE USAGE'
-            print ""
-            print 'Enter command line arguments in following order:'
-            print '1. datacube: Input datacube filepath'
-            print '2. DIT: Exposure time [s]'
-            print '3. NDIT: No. of exposures'
-            print '4. grating: [F070-G140M, F100-G140M, G235M, G395M, F070-G140H, F100-G140H, G235H, G395H, Prism]'
-            print '5. Ignore LSF convolution? (True/False) - turnes off LSF convolution in spectral dimension'
-            print '6. PSF blur: Additional telescope PSF blur [mas]'
-            print '7. Spec_Nyquist: (True/False) - Set spectral sampling to Nyquist sample spectral resolution element'
-            print '8. Spec samp: Spectral sampling [A/pix] - Only used if Spec_Nyquist=False, but enter a value regardless!'
-            print '9. Noise force seed: Force random number seed to take a set value (0=No, 1-10=yes and takes that value)'
-            print '10. Remove background: (True/False) - Subtract background spectrum'
-            print '11. Return object cube: (True/False) - Return object FITS cube'
-            print '12. Return transmission cube: (True/False) - Return transmission FITS cube'
-            print '13. Approximate Drizzle technique: (True/False) - Output sampling of 50 mas'
-            print ""
+            print("")
+            print('COMMAND LINE USAGE')
+            print("")
+            print('Enter command line arguments in following order:')
+            print('1. datacube: Input datacube filepath')
+            print('2. DIT: Exposure time [s]')
+            print('3. NDIT: No. of exposures')
+            print('4. grating: [F070-G140M, F100-G140M, G235M, G395M, F070-G140H, F100-G140H, G235H, G395H, Prism]')
+            print('5. Ignore LSF convolution? (True/False) - turnes off LSF convolution in spectral dimension')
+            print('6. PSF blur: Additional telescope PSF blur [mas]')
+            print('7. Spec_Nyquist: (True/False) - Set spectral sampling to Nyquist sample spectral resolution element')
+            print('8. Spec samp: Spectral sampling [A/pix] - Only used if Spec_Nyquist=False, but enter a value regardless!')
+            print('9. Noise force seed: Force random number seed to take a set value (0=No, 1-10=yes and takes that value)')
+            print('10. Remove background: (True/False) - Subtract background spectrum')
+            print('11. Return object cube: (True/False) - Return object FITS cube')
+            print('12. Return transmission cube: (True/False) - Return transmission FITS cube')
+            print('13. Approximate Drizzle technique: (True/False) - Output sampling of 50 mas')
+            print("")
             sys.exit()
         elif o in ("-c", "--cline") and len(args) == 13:
-            print args
+            print(args)
             datacube = str(args[0])
             DIT = int(args[1])
             NDIT = int(args[2])
@@ -300,21 +301,21 @@ if __name__=="__main__":
                     odir = str(self.DIRVAL.GetPath())
                     combnditsval=True
 
-                    print 'Filename: ', cubefile
-                    print 'DIT = ', ditval
-                    print 'NINT = ', nditval
-                    print 'Grating = ', photoband
-                    print 'Ignore LSF conv?', ignorespecval
-                    print 'Residual jitter = ', resjitval
-                    print 'Temperature = ', sitetempval
-                    print 'Noise seed = ', noiseseedval
-                    print 'Spectral Nyquist sampling? ', spec_nyq
-                    print 'Subtract background? ', remove_bgval
-                    print 'Return object cube? ', return_obval
-                    print 'Return transmission? ', return_tsval
-                    print 'Drizzle?', drizzleval
-                    print 'No. of processors = ', nprocs
-                    print 'Output directory = ', odir
+                    print('Filename: ', cubefile)
+                    print('DIT = ', ditval)
+                    print('NINT = ', nditval)
+                    print('Grating = ', photoband)
+                    print('Ignore LSF conv?', ignorespecval)
+                    print('Residual jitter = ', resjitval)
+                    print('Temperature = ', sitetempval)
+                    print('Noise seed = ', noiseseedval)
+                    print('Spectral Nyquist sampling? ', spec_nyq)
+                    print('Subtract background? ', remove_bgval)
+                    print('Return object cube? ', return_obval)
+                    print('Return transmission? ', return_tsval)
+                    print('Drizzle?', drizzleval)
+                    print('No. of processors = ', nprocs)
+                    print('Output directory = ', odir)
 
                     #start main program
                     main(cubefile, odir, ditval, nditval, photoband,
@@ -342,25 +343,25 @@ if __name__=="__main__":
                     wx.AboutBox(info)
 
         except:
-            print""
-            print 'JWST/NIRSpec Simulator'
-            print '    --------     '
-            print 'NO WX MODULE'
-            print 'wxPython can be downloaded from: http://www.wxpython.org/'
-            print""
-            print 'COMMAND LINE USAGE ONLY'
-            print""
-            print '>>> python jsim.py -c arg1 arg2 ...'
-            print""
-            print 'To see help:'
-            print""
-            print '>>> python jsim.py -c -h'
-            print""
-            print 'To see required arguments:'
-            print""
-            print '>>> python jsim.py -c'
-            print""
-            print"---"
+            print("")
+            print('JWST/NIRSpec Simulator')
+            print('    --------     ')
+            print('NO WX MODULE')
+            print('wxPython can be downloaded from: http://www.wxpython.org/')
+            print("")
+            print('COMMAND LINE USAGE ONLY')
+            print("")
+            print('>>> python jsim.py -c arg1 arg2 ...')
+            print("")
+            print('To see help:')
+            print("")
+            print('>>> python jsim.py -c -h')
+            print("")
+            print('To see required arguments:')
+            print("")
+            print('>>> python jsim.py -c')
+            print("")
+            print("---")
             sys.exit()
         if wxfound:
             #GUI interface
