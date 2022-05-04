@@ -5,7 +5,9 @@ Author: Simon Zieleniewski
 
 Created: 16-10-15
 
-Last updated: 03-12-15
+Last updated: 04-05-22
+
+04-05-22 Migrated to Python 3 by David Law & Sian Phillips 
 
 '''
 from __future__ import print_function
@@ -340,7 +342,7 @@ if __name__=="__main__":
                     #info.SetCopyright('(C) 2014')
                     #info.SetWebSite('http://www.url.co.uk')
                     #info.SetLicence(licence)
-                    info.AddDeveloper('Simon Zieleniewski, Sarah Kendrew, Ryan Houghton & Niranjan Thatte')
+                    info.AddDeveloper('Simon Zieleniewski, Sarah Kendrew, Ryan Houghton, Niranjan Thatte, David Law & Sian Phillips')
                     info.AddDocWriter('Simon Zieleniewski')
                     #info.AddArtist('Artist')
                     #info.AddTranslator('Translator')
