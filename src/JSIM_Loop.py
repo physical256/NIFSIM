@@ -62,9 +62,9 @@ def wavelength_loop(cube, head, wavels, out_cube, newsize, outspax):
         update_progress(n.round(l/float(len(wavels)),2))
 
         #Create PSF channel
-        psf = nspec.calcPSF(outfile=None, source=None, filter=None, nlambda=None,
+        psf = nspec.calc_psf(outfile=None, source=None, nlambda=None,
                             monochromatic=wavels[l]*1.E-6, oversample=oversamp,
-                            fov_arcsec=5, rebin=False)
+                            fov_arcsec=5)
 
         psf = psf[0].data
 
@@ -119,9 +119,9 @@ def pp_wavelength_channel(chann, head, wave, l, newsize, outspax):
 
     #Create PSF channel
     #print 'Wavelength = ', wave*1.E-6, 'm'
-    psf = nspec.calcPSF(outfile=None, source=None, filter=None, nlambda=None,
+    psf = nspec.calc_psf(outfile=None, source=None, nlambda=None,
                         monochromatic=wave*1.E-6, oversample=oversamp,
-                        fov_arcsec=5, rebin=False)
+                        fov_arcsec=5)
     psf = psf[0].data
 
     #Convolve cube channel with PSF channel

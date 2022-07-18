@@ -119,8 +119,10 @@ def point_source(cube, head, spax):
     test_y = extent_y/float(spax[1])
 #    if test_x < 1. or test_y < 1.:
 
-    ratio_x = spax[0]/float(head['CDELT1'])
-    ratio_y = spax[1]/float(head['CDELT2'])
+    #ratio_x = spax[0]/float(head['CDELT1'])
+    #ratio_y = spax[1]/float(head['CDELT2'])
+    ratio_x = spax[0]/(head['CDELT1'])
+    ratio_y = spax[1]/(head['CDELT2'])
 
     newsize_x = ratio_x
     newsize_y = ratio_y

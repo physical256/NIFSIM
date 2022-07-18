@@ -86,6 +86,8 @@ def JWST_transmission_curve(wavels, grating):
 
     #Find start and end wavelength values of curves
     tt_start_arg = n.where(tele_r[:,0] < wavels[0])[0][-1]
+    print(n.where(tele_r[:,0] > wavels[-1]))
+    print(n.shape(n.where(tele_r[:,0] > wavels[-1])))
     tt_end_arg = n.where(tele_r[:,0] > wavels[-1])[0][0]
     tele_trans_slice = tele_r[tt_start_arg:tt_end_arg+1,:]
 

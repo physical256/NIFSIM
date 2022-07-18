@@ -31,7 +31,7 @@ def generate_object_cube(datacube, wavels, throughput_cube, DIT, NDIT, spaxel, d
         object_noise: cube representing shot noise in electrons for each pixel
         object_cube: Noiseless object cube
     '''
-
+    print(datacube, throughput_cube, spaxel[0], spaxel[1], delta_lambda, area)
     if slow==True:
         object_cube = datacube*throughput_cube*DIT*(spaxel[0]*spaxel[1])*delta_lambda*area
 
@@ -43,7 +43,7 @@ def generate_object_cube(datacube, wavels, throughput_cube, DIT, NDIT, spaxel, d
     
     else:
         object_cube = datacube*throughput_cube*DIT*NDIT*(spaxel[0]*spaxel[1])*delta_lambda*area
-        object_cube_new = n.random.poisson(abs(object_cube))
+        object_cube_new = n.random.poisson(abs(object_cube).astype(n.float64))
         
     object_cube_new = object_cube_new.astype(n.float64)
     object_noise = n.abs(object_cube_new-object_cube)

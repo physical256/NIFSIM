@@ -41,12 +41,13 @@ def psf_convolve(datacube, psfcube):
             extra_y += 1
             yfac = 1
         img_box = n.zeros((yy, xx), dtype=n.float64)
-
-        img_box[(extra_y/2.)-yfac:yy-extra_y/2.,(extra_x/2.)-xfac:xx-extra_x/2.] = datacube
+        list_ind = [int((extra_y/2.)-yfac), int(yy-extra_y/2.),int((extra_x/2.)-xfac), int(xx-extra_x/2.)] 
+        #img_box[int((extra_y/2.)-yfac):int(yy-extra_y/2.),int((extra_x/2.)-xfac):int(xx-extra_x/2.)] = datacube
+        img_box[list_ind[0]:list_ind[1], list_ind[2]:list_ind[3]] = datacube
         conv_cube_slice = n.fft.ifft2(n.fft.fft2(img_box)*n.fft.fft2(psfcube))
         conv_cube_slice_final = n.fft.fftshift(conv_cube_slice.real)
-        conv_channel = conv_cube_slice_final[(extra_y/2.)-yfac:yy-extra_y/2.,(extra_x/2.)-xfac:xx-extra_x/2.]
-
+        #conv_channel = conv_cube_slice_final[int((extra_y/2.)-yfac):int(yy-extra_y/2.),int((extra_x/2.)-xfac):int(xx-extra_x/2.)] 
+        conv_channel = conv_cube_slice_final[list_ind[0]:list_ind[1], list_ind[2]:list_ind[3]]
     #If PSF images are smaller than cube images, do something else!
     elif yy < y and xx < x:
 #        print 'PSF cube smaller than datacube - padding PSF array with outermost values to PSF size - then FFT convolving.'
@@ -61,10 +62,13 @@ def psf_convolve(datacube, psfcube):
             yfac = 1
         img_box = n.zeros((y, x), dtype=n.float64)
 
-        img_box[(extra_y/2.)-yfac:y-extra_y/2.,(extra_x/2.)-xfac:x-extra_x/2.] = psfcube
+        list_ind = [int((extra_y/2.)-yfac), int(y-extra_y/2.), int((extra_x/2.)-xfac), int(x-extra_x/2.)]
+        #img_box[(extra_y/2.)-yfac:y-extra_y/2.,(extra_x/2.)-xfac:x-extra_x/2.] = psfcube
+        img_box[list_ind[0]:list_ind[1], list_ind[2]:list_ind[3]] = psfcube
         conv_cube_slice = n.fft.ifft2(n.fft.fft2(datacube)*n.fft.fft2(img_box))
         conv_cube_slice_final = n.fft.fftshift(conv_cube_slice.real)
-        conv_channel = conv_cube_slice_final[(extra_y/2.)-yfac:y-extra_y/2.,(extra_x/2.)-xfac:x-extra_x/2.]
+        #conv_channel = conv_cube_slice_final[(extra_y/2.)-yfac:y-extra_y/2.,(extra_x/2.)-xfac:x-extra_x/2.]
+        conv_channel = conv_cube_slice_final[list_ind[0]:list_ind[1], list_ind[2]:list_ind[3]]
 
     else:
         print('Datacube spatial shape = (%g, %g)' % (datacube.shape[1], datacube.shape[0]))

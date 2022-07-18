@@ -31,7 +31,8 @@ config_data = {
                  'G235H':(1.7,3.0,0.00087), 'G395H':(2.9,5.0,0.00146),
                  'Prism':'Lowres'},
 
-    'spaxels': (100.,100.),         #Spaxel scale [mas, mas]
+    #This line changed by Mahsa & Sian: previously 'spaxels' = (100., 100.) allowing only this value to be used as CDELT1 & 2
+    'spaxels': (100., 100.),         #Spaxel scale [mas, mas]
     # 'spaxels': (200.,460.),
 
     'field_of_view': (30, 30),      #(x, y) field of view in spaxels

@@ -25,8 +25,10 @@ import multiprocessing as mp
 from src.JSIM_main import main
 import subprocess
 from src.modules.misc_utils import path_setup
+import time
 
-
+#SGP addition
+start_time_check = time.time()
 
 if __name__=="__main__":
 
@@ -374,3 +376,8 @@ if __name__=="__main__":
             app = wx.App()
             Form1(None, title="JSIM/NIRSpec Interface")
             app.MainLoop()
+
+#SGP addition
+end_time_check = time.time()
+elapsed_time = end_time_check - start_time_check
+print('Elapsed time is', elapsed_time, 'seconds')

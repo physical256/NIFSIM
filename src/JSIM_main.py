@@ -37,8 +37,6 @@ from .modules.misc_utils import generate_seed, point_source
 from .modules.fits_utils import *
 from .JSIM_Config import *
 
-
-
 def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
          site_temp=280.5, combine_ndits=True, Spec_nyquist=True, Spec_samp=1.,
          noise_force_seed=0, remove_background='False', return_object='False',
@@ -100,6 +98,7 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
         spax = (50., 50.)
     else:
         spax = config_data['spaxels']
+    print('The value of spax[0] is', spax[0], 'spax[1] is', spax[1]) 
 
 
     #OPEN INPUT FITS file
@@ -152,7 +151,6 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
         cube, head = spaxel_scale(cube, head, (spax[0]/10.,spax[0]/10.))
         cube /= (head['CDELT1']*head['CDELT2']*1.E-6)
 
-
     #Empty output cube
     out_cube = n.zeros((len(lambs),int(old_div(head['CDELT2']*head['NAXIS2'],spax[1])),
                         int(old_div(head['CDELT1']*head['NAXIS1'],spax[0]))), dtype=n.float64)
@@ -161,7 +159,6 @@ def main(datacube, outdir, DIT, NDIT, grating, ignoreLSF, res_jitter=0,
     print('Cube shape (lam, y, x) = ', cube.shape)
     print('Output spaxel scale (x, y) = ', spax, ' mas')
     print('Output cube shape (lam, y, x) = ', out_cube.shape)
-
 
     #WAVELENGTH CHANNEL LOOP
     print('Entering loop over wavelength channels')
